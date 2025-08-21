@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0F1F6C">
+  <title>Weightless - CO₂ Training Timer</title>
+  <link rel="manifest" href="/manifest.webmanifest">
+  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="container">
+    <!-- Background with gradient -->
+    <div class="bg">
+      <div class="bg-gradient"></div>
+      <div class="bg-noise"></div>
+      <div class="image-area">
+        <img class="main-avatar" src="images/image_main avatar.svg" alt="Main avatar" width="75.3" height="83.75" />
+      </div>
+    </div>
+
+    <!-- Header -->
+    <header class="header">
+      <!-- <button id="hamburger-btn" class="header-btn" aria-label="Menu">
+        <img src="icn/Hamburger.svg" alt="Menu" width="24" height="24"> -->
+      </button>
+      <div class="logo">
+        <img src="icn/MainLogo.svg" alt="Weightless" width="142" height="30">
+      </div>
+      <button id="sound-btn" class="header-btn" aria-label="Sound">
+        <img id="sound-icon" src="icn/SoundOn.svg" alt="Sound On" width="24" height="24">
+      </button>
+    </header>
+
+    <!-- Marquee -->
+    <div class="marquee">
+      <span>This CO₂ training timer is designed to support safe practice. Please use mindfully and never train alone.</span>
+    </div>
+
+    <!-- Session Panel - Collapsed (Default) -->
+    <section id="session-panel-collapsed" class="session-panel">
+      <div class="card-header">
+        <div class="round-data">
+          <div class="round-count">8 Round</div>
+          <div class="round-time">-10s per round</div>
+        </div>
+        <button id="expand-btn" class="chevron-btn" aria-label="Expand">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.76 8L12 14.24L18.24 8" stroke="#F7FAFC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="time-data">
+        <div class="time-item">
+          <div class="label">Breathe</div>
+          <div class="time">2:00</div>
+        </div>
+        <div class="time-item">
+          <div class="label">Hold</div>
+          <div class="time">0:50</div>
+        </div>
+      </div>
+      
+      <div class="button-area">
+        <button class="edit-btn" onclick="window.location.href='/pages/edit.html'">edit</button>
+        <button class="start-btn">
+          Start Training
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.83 3.34L13.16 8L2.83 12.66V3.34Z" fill="#0F1F6C"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Session Panel - Expanded (Hidden by default) -->
+    <section id="session-panel-expanded" class="session-panel expanded" style="display: none;">
+      <div class="card-header">
+        <div class="round-data">
+          <div class="round-count">8 Round</div>
+          <div class="round-time">-10s per round</div>
+        </div>
+        <button id="collapse-btn" class="chevron-btn" aria-label="Collapse">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5.76 9.76L12 3.52L18.24 9.76" stroke="#F7FAFC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="table">
+        <div class="table-header">
+          <div class="cell">R</div>
+          <div class="cell">Breathe</div>
+          <div class="cell">Hold</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">1</div>
+          <div class="cell">2:00</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">2</div>
+          <div class="cell">1:50</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">3</div>
+          <div class="cell">1:40</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">4</div>
+          <div class="cell">1:30</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">5</div>
+          <div class="cell">1:20</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">6</div>
+          <div class="cell">1:10</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">7</div>
+          <div class="cell">1:00</div>
+          <div class="cell">1:00</div>
+        </div>
+        <div class="table-row">
+          <div class="cell">8</div>
+          <div class="cell">0:50</div>
+          <div class="cell">1:00</div>
+        </div>
+      </div>
+      
+      <!-- Total Time Section -->
+      <div class="total-time-section">
+        <div class="total-time-label">Total</div>
+        <div class="total-time-value" id="total-time-display">19m 20s</div>
+      </div>
+      
+      <div class="button-area">
+        <button class="edit-btn" onclick="window.location.href='/pages/edit.html'">edit</button>
+        <button class="start-btn">
+          Start Training
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2.83 3.34L13.16 8L2.83 12.66V3.34Z" fill="#0F1F6C"/>
+          </svg>
+        </button>
+      </div>
+    </section>
+
+    <!-- Training Screen (Hidden by default) -->
+    <div id="training-screen" class="training-screen" style="display: none;">
+      <!-- Ready Information -->
+      <div id="ready-info" class="ready-info">
+        <div class="ready-text">Round 1 starts soon.</div>
+        <div id="countdown" class="countdown">3</div>
+      </div>
+
+      <!-- Running Session Panel -->
+      <section id="running-panel" class="running-panel" style="display: none;">
+        <div class="information">
+          <div class="round-data">
+            <div class="round-count">
+              <span id="current-round">1</span>
+              <span class="total-round" id="total-round">/8</span>
+            </div>
+            <div class="time-left" id="time-left">19m 20s left</div>
+          </div>
+          <div class="time-data">
+            <div class="time-item">
+              <div class="label">Breathe</div>
+              <div class="time" id="breathe-time">1:50</div>
+            </div>
+            <div class="time-item">
+              <div class="label">Hold</div>
+              <div class="time" id="hold-time">0:50</div>
+            </div>
+          </div>
+        </div>
+        <div class="button-area">
+          <button class="stop-btn">Stop</button>
+          <button class="pause-btn">Pause</button>
+        </div>
+      </section>
+    </div>
+  </div>
+  
+  <!-- 모듈 로딩 순서: pwa → analytics → main -->
+  <script type="module" src="/js/pwa.js"></script>
+  <script type="module" src="/js/analytics.js"></script>
+  <script type="module" src="/js/main.js"></script>
+</body>
+</html>
