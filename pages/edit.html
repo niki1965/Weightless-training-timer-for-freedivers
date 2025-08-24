@@ -312,126 +312,394 @@
       left: 0;
       width: 100vw;
       height: 100vh;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.);
       backdrop-filter: blur(4px);
       z-index: 1000;
       display: none;
-      align-items: center;
+      align-items: flex-end;
       justify-content: center;
     }
 
     .modal {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 30px;
-      max-width: 300px;
-      width: 90%;
-      text-align: center;
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      background: #F7FAFC;
+      border-radius: 20px 20px 0px 0px;
+      width: 100%;
+      max-width: 400px;
+      height: 385px;
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px;
+      background: #F7FAFC;
+      border-radius: 20px 20px 0px 0px;
     }
 
     .modal-title {
       font-family: 'Pretendard';
-      font-weight: 600;
-      font-size: 18px;
-      color: #0F1F6C;
-      margin-bottom: 20px;
+      font-weight: 400;
+      font-size: 16px;
+      line-height: 1.4em;
+      color: #10151A;
     }
 
-    .time-input-group {
+    .modal-close-btn {
+      width: 24px;
+      height: 24px;
+      background: none;
+      border: none;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
-      margin-bottom: 20px;
+      padding: 0;
     }
 
-    .time-input {
-      background: rgba(15, 31, 108, 0.1);
-      border: 1px solid #0F1F6C;
-      border-radius: 8px;
-      padding: 12px;
-      font-family: 'Pretendard';
-      font-weight: 600;
-      font-size: 20px;
-      color: #0F1F6C;
-      text-align: center;
-      width: 60px;
-      outline: none;
+    .modal-close-btn svg {
+      width: 13.5px;
+      height: 13.5px;
     }
 
-    .time-input:focus {
-      border-color: #F7FAFC;
-      background: rgba(15, 31, 108, 0.15);
+    .modal-close-btn path {
+      stroke: #212121;
+      stroke-width: 1.5;
     }
 
-    .time-separator {
-      font-family: 'Pretendard';
-      font-weight: 600;
-      font-size: 20px;
-      color: #0F1F6C;
-    }
-
-    .round-input {
-      background: rgba(15, 31, 108, 0.1);
-      border: 1px solid #0F1F6C;
-      border-radius: 8px;
-      padding: 12px;
-      font-family: 'Pretendard';
-      font-weight: 600;
-      font-size: 20px;
-      color: #0F1F6C;
-      text-align: center;
-      width: 80px;
-      outline: none;
-      margin-bottom: 20px;
-    }
-
-    .round-input:focus {
-      border-color: #F7FAFC;
-      background: rgba(15, 31, 108, 0.15);
-    }
-
-    .modal-buttons {
+    .time-picker-area {
+      position: relative;
+      width: 100%;
+      height: 248px;
       display: flex;
-      gap: 10px;
+      flex-direction: column;
+      align-items: center;
       justify-content: center;
+      overflow: hidden;
+      touch-action: none; /* 모달 컨테이너는 터치 차단, 내부 스크롤 영역만 pan-y */
     }
 
-    .modal-btn {
-      background: rgba(15, 31, 108, 0.9);
-      border: none;
-      border-radius: 15px;
-      padding: 10px 20px;
+    .selection-area {
+      position: absolute;
+      top: 50%;
+      left: 24px;
+      right: 24px;
+      height: 40px;
+      background: #FFFFFF;
+      border-radius: 10px;
+      z-index: 0;
+      transform: translateY(-50%);
+      pointer-events: none;
+    }
+
+    .time-picker-container {
+      position: relative;
+      width: 100%;
+      height: 100%;
+    }
+
+    .minutes-area,
+    .seconds-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 60px;
+      height: 248px; /* time-picker-area와 같은 높이 */
+      overflow-y: auto;
+      overflow-x: hidden; /* 좌우 스크롤 차단 */
+      position: relative;
+      padding-top: calc(var(--item-height) * 2);
+      padding-bottom: calc(var(--item-height) * 2);
+      /* 네이티브 스크롤 snap 설정 */
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain; /* 문서로 스크롤 전파 방지 */
+      -webkit-overflow-scrolling: touch; /* iOS 관성 */
+      touch-action: pan-y; /* 터치 시 상하 스크롤만 허용 */
+      /* 공통 아이템 높이 정의 */
+      --item-height: 40px;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+      /* 터치 인터랙션 개선 */
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .minutes-area::-webkit-scrollbar,
+    .seconds-area::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+
+    .minutes-area {
+      margin-right: 0;
+    }
+
+    .seconds-area {
+      margin-left: 0;
+    }
+
+    /* Minutes section with label */
+    .minutes-section {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      position: absolute;
+      left: 50px;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      height: 100%;
+      /* 스크롤 영역을 전체로 확장 */
+      width: 120px; /* 라벨 포함한 전체 너비 */
+    }
+
+    /* Seconds section with label */
+    .seconds-section {
+      display: flex;
+      align-items: center;
+      gap: 1px;
+      position: absolute;
+      right: 50px;
+      top: 0;
+      bottom: 0;
+      z-index: 2;
+      height: 100%;
+      /* 스크롤 영역을 전체로 확장 */
+      width: 120px; /* 라벨 포함한 전체 너비 */
+    }
+
+    .single-picker-container {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .single-picker-area {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 60px;
+      height: 100%;
+
+      /* 네이티브 스크롤 + 스냅 */
+      overflow-y: auto;
+      overflow-x: hidden;
+      position: relative;
+      padding-top: calc(var(--item-height) * 2);
+      padding-bottom: calc(var(--item-height) * 2);
+      scroll-snap-type: y mandatory;
+      scroll-behavior: smooth;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      touch-action: pan-y;
+
+      /* 공통 아이템 높이 */
+      --item-height: 40px;
+
+      /* 스크롤바 숨김 */
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE/Edge */
+      
+      /* 터치 인터랙션 개선 */
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .single-picker-area::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
+    }
+
+    .time-picker-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--item-height);
+      font-family: 'Pretendard';
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 1.4em;
+      color: #CFD0D1;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      /* 스크롤 스냅 중앙 정렬 */
+      scroll-snap-align: center;
+      /* 터치 인터랙션 개선 */
+      touch-action: pan-y;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .time-picker-item.selected {
+      font-weight: 600;
+      color: #0F1F6C;
+    }
+
+    .time-picker-item:hover {
+      color: #0F1F6C;
+    }
+
+    .time-picker-item:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+
+    /* 스페이서 아이템 (투명하고 클릭 불가) */
+    .picker-spacer {
+      pointer-events: none;
+      color: transparent !important;
+      user-select: none;
+      cursor: default;
+    }
+
+    /* Rounds specific styles */
+    .rounds-picker-item {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height: var(--item-height);
+      font-family: 'Pretendard';
+      font-weight: 700;
+      font-size: 26px;
+      line-height: 1.4em;
+      color: #CFD0D1;
+      text-align: center;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      user-select: none;
+      /* 스크롤 스냅 중앙 정렬 */
+      scroll-snap-align: center;
+      /* 터치 인터랙션 개선 */
+      touch-action: pan-y;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    .rounds-picker-item.selected {
+      font-weight: 600;
+      color: #0F1F6C;
+    }
+
+    .rounds-picker-item:hover {
+      color: #0F1F6C;
+    }
+
+    .rounds-picker-item:active {
+      transform: scale(0.95);
+      transition: transform 0.1s ease;
+    }
+
+    .time-label {
       font-family: 'Pretendard';
       font-weight: 500;
+      font-size: 20px;
+      line-height: 1.6em;
+      color: #585B5F;
+      pointer-events: none;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      height: 40px; /* selection-area와 같은 높이 */
+    }
+
+    .time-label.minutes {
+      /* flexbox로 제어되므로 별도 positioning 불필요 */
+      margin-left: 1px;
+    }
+
+    .time-label.seconds {
+      /* flexbox로 제어되므로 별도 positioning 불필요 */
+      margin-left: 1px;
+    }
+
+    .time-label.rounds {
+      right: 100px;
+    }
+
+    /* Single picker label positioning */
+    .single-picker-area .time-label {
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    .divider {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 1px;
+      height: 238px;
+      background: #E7E9F0;
+      z-index: 1;
+    }
+
+    .blur-top,
+    .blur-bottom {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 50px;
+      z-index: 4;
+      pointer-events: none;
+    }
+
+    .blur-top {
+      top: 0;
+      background: linear-gradient(0deg, rgba(247, 250, 252, 0) 0%, rgba(247, 250, 252, 1) 100%);
+    }
+
+    .blur-bottom {
+      bottom: 0;
+      background: linear-gradient(0deg, rgba(247, 250, 252, 1) 0%, rgba(247, 250, 252, 0) 100%);
+    }
+
+    .modal-button-area {
+      padding: 0px 24px 24px;
+      background: #F7FAFC;
+    }
+
+    .modal-save-btn {
+      width: 100%;
+      height: 45px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #E7E8E8;
+      border-radius: 30px;
+      font-family: 'Pretendard';
+      font-weight: 400;
       font-size: 14px;
-      color: #F7FAFC;
+      line-height: 1.2em;
+      color: #0F1F6C;
       cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      backdrop-filter: blur(12px);
       transition: all 0.2s ease;
     }
 
-    .modal-btn:hover {
-      background: rgba(15, 31, 108, 1);
-      transform: translateY(-1px);
+    .modal-save-btn:hover {
+      background: rgba(255, 255, 255, 1);
     }
 
-    .modal-btn.cancel {
-      background: rgba(231, 233, 240, 0.9);
-      color: #0F1F6C;
+    .modal-save-btn:active {
+      transform: scale(0.98);
     }
 
-    .modal-btn.cancel:hover {
-      background: rgba(231, 233, 240, 1);
-    }
+    /* Single picker styles (for decrease time and rounds) - moved above */
 
+
+
+    /* Hide old modal styles */
+    .time-input-group,
+    .time-input,
+    .time-separator,
+    .round-input,
+    .modal-buttons,
+    .modal-btn,
     .unit-text {
-      font-family: 'Pretendard';
-      font-weight: 500;
-      font-size: 16px;
-      color: #0F1F6C;
-      margin-left: 5px;
+      display: none;
     }
 
 
@@ -463,7 +731,7 @@
 
     <!-- Edit Content -->
     <main class="edit-content">
-      <div class="edit-line" onclick="window.openTimeModal('holdTime', 'Hold Time')">
+      <div class="edit-line" onclick="window.openTimeModal('holdTime', 'How long is each hold?')">
         <span class="edit-text">I'll hold my breath for</span>
         <span id="holdTime" class="input-field">1m 00s</span>
       </div>
@@ -472,7 +740,7 @@
         <span class="error-text">Validation message text</span>
       </div>
       
-      <div class="edit-line" onclick="window.openTimeModal('breathStart', 'Breathing Start Time')">
+      <div class="edit-line" onclick="window.openBreathingStartModal('breathStart', 'First breathing time?')">
         <span class="edit-text">Breathing starts at</span>
         <span id="breathStart" class="input-field">2m 00s</span>
       </div>
@@ -481,7 +749,7 @@
         <span class="error-text">Validation message text</span>
       </div>
       
-      <div class="edit-line" onclick="window.openSecondsModal('decreaseTime', 'Decrease Time')">
+      <div class="edit-line" onclick="window.openSecondsModal('decreaseTime', 'Seconds to drop per round?')">
         <span class="edit-text">and decreases by</span>
         <span id="decreaseTime" class="input-field">10 sec</span>
         <span class="edit-text">each round,</span>
@@ -491,7 +759,7 @@
         <span class="error-text">Validation message text</span>
       </div>
       
-      <div class="edit-line" onclick="window.openRoundsModal('totalRounds', 'Total Rounds')">
+      <div class="edit-line" onclick="window.openRoundsModal('totalRounds', 'How many rounds?')">
         <span class="edit-text">for a total of</span>
         <span id="totalRounds" class="input-field">8</span>
         <span class="edit-text">rounds.</span>
@@ -516,34 +784,159 @@
     </div>
   </div>
 
-  <!-- Time Input Modal -->
+    <!-- Time Input Modal -->
   <div id="timeModal" class="modal-overlay">
     <div class="modal">
-      <div class="modal-title" id="timeModalTitle">Set Time</div>
-      <div class="time-input-group">
-        <input type="number" id="timeMinutes" class="time-input" min="0" max="59" value="1">
-        <span class="time-separator">:</span>
-        <input type="number" id="timeSeconds" class="time-input" min="0" max="59" value="0">
-        <span class="unit-text">min</span>
+      <div class="modal-header">
+                 <h2 class="modal-title" id="timeModalTitle">How long is each hold?</h2>
+        <button class="modal-close-btn" onclick="window.closeModal('timeModal')">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18"/>
+          </svg>
+        </button>
       </div>
-      <div class="modal-buttons">
-        <button class="modal-btn cancel" onclick="window.closeModal('timeModal')">Cancel</button>
-        <button class="modal-btn" onclick="window.saveTime()">Save</button>
-      </div>
+             <div class="time-picker-area">
+         <div class="selection-area"></div>
+                 <div class="minutes-section">
+          <div class="minutes-area">
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item" data-value="0">0</div>
+            <div class="time-picker-item" data-value="1">1</div>
+            <div class="time-picker-item" data-value="2">2</div>
+            <div class="time-picker-item" data-value="3">3</div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+          </div>
+          <div class="time-label minutes">m</div>
+        </div>
+        <div class="seconds-section">
+          <div class="seconds-area">
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item" data-value="00">00</div>
+            <div class="time-picker-item" data-value="05">05</div>
+            <div class="time-picker-item" data-value="10">10</div>
+            <div class="time-picker-item" data-value="15">15</div>
+            <div class="time-picker-item" data-value="20">20</div>
+            <div class="time-picker-item" data-value="25">25</div>
+            <div class="time-picker-item" data-value="30">30</div>
+            <div class="time-picker-item" data-value="35">35</div>
+            <div class="time-picker-item" data-value="40">40</div>
+            <div class="time-picker-item" data-value="45">45</div>
+            <div class="time-picker-item" data-value="50">50</div>
+            <div class="time-picker-item" data-value="55">55</div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+          </div>
+          <div class="time-label seconds">s</div>
+        </div>
+         <div class="divider"></div>
+         <div class="blur-top"></div>
+         <div class="blur-bottom"></div>
+       </div>
+       <div class="modal-button-area">
+         <button class="modal-save-btn" onclick="window.saveTime()">Save</button>
+       </div>
     </div>
   </div>
 
   <!-- Seconds Input Modal -->
   <div id="secondsModal" class="modal-overlay">
     <div class="modal">
-      <div class="modal-title" id="secondsModalTitle">Set Seconds</div>
-      <div class="time-input-group">
-        <input type="number" id="secondsInput" class="time-input" min="1" max="60" value="10">
-        <span class="unit-text">sec</span>
+      <div class="modal-header">
+                 <h2 class="modal-title" id="secondsModalTitle">Drop per round?</h2>
+        <button class="modal-close-btn" onclick="window.closeModal('secondsModal')">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18"/>
+          </svg>
+        </button>
       </div>
-      <div class="modal-buttons">
-        <button class="modal-btn cancel" onclick="window.closeModal('secondsModal')">Cancel</button>
-        <button class="modal-btn" onclick="window.saveSeconds()">Save</button>
+             <div class="time-picker-area">
+         <div class="selection-area"></div>
+                 <div class="single-picker-container">
+          <div class="single-picker-area">
+            <div class="time-label seconds">s</div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item" data-value="00">00</div>
+            <div class="time-picker-item" data-value="05">05</div>
+            <div class="time-picker-item" data-value="10">10</div>
+            <div class="time-picker-item" data-value="15">15</div>
+            <div class="time-picker-item" data-value="20">20</div>
+            <div class="time-picker-item" data-value="25">25</div>
+            <div class="time-picker-item" data-value="30">30</div>
+            <div class="time-picker-item" data-value="35">35</div>
+            <div class="time-picker-item" data-value="40">40</div>
+            <div class="time-picker-item" data-value="45">45</div>
+            <div class="time-picker-item" data-value="50">50</div>
+            <div class="time-picker-item" data-value="55">55</div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+          </div>
+        </div>
+         <div class="blur-top"></div>
+         <div class="blur-bottom"></div>
+       </div>
+      <div class="modal-button-area">
+        <button class="modal-save-btn" onclick="window.saveSeconds()">Save</button>
+      </div>
+    </div>
+  </div>
+
+    <!-- Breathing Start Time Modal -->
+  <div id="breathingStartModal" class="modal-overlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h2 class="modal-title" id="breathingStartModalTitle">First breathing time?</h2>
+        <button class="modal-close-btn" onclick="window.closeModal('breathingStartModal')">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="time-picker-area">
+        <div class="selection-area"></div>
+        <div class="minutes-section">
+          <div class="minutes-area">
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item" data-value="0">0</div>
+            <div class="time-picker-item" data-value="1">1</div>
+            <div class="time-picker-item" data-value="2">2</div>
+            <div class="time-picker-item" data-value="3">3</div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+          </div>
+          <div class="time-label minutes">m</div>
+        </div>
+        <div class="seconds-section">
+          <div class="seconds-area">
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item" data-value="00">00</div>
+            <div class="time-picker-item" data-value="05">05</div>
+            <div class="time-picker-item" data-value="10">10</div>
+            <div class="time-picker-item" data-value="15">15</div>
+            <div class="time-picker-item" data-value="20">20</div>
+            <div class="time-picker-item" data-value="25">25</div>
+            <div class="time-picker-item" data-value="30">30</div>
+            <div class="time-picker-item" data-value="35">35</div>
+            <div class="time-picker-item" data-value="40">40</div>
+            <div class="time-picker-item" data-value="45">45</div>
+            <div class="time-picker-item" data-value="50">50</div>
+            <div class="time-picker-item" data-value="55">55</div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+            <div class="time-picker-item picker-spacer" data-value=""></div>
+          </div>
+          <div class="time-label seconds">s</div>
+        </div>
+        <div class="divider"></div>
+        <div class="blur-top"></div>
+        <div class="blur-bottom"></div>
+      </div>
+      <div class="modal-button-area">
+        <button class="modal-save-btn" onclick="window.saveBreathingStart()">Save</button>
       </div>
     </div>
   </div>
@@ -551,14 +944,40 @@
   <!-- Rounds Input Modal -->
   <div id="roundsModal" class="modal-overlay">
     <div class="modal">
-      <div class="modal-title" id="roundsModalTitle">Set Rounds</div>
-      <div class="time-input-group">
-        <input type="number" id="roundsInput" class="round-input" min="1" max="10" value="8">
-        <span class="unit-text">rounds</span>
+      <div class="modal-header">
+        <h2 class="modal-title" id="roundsModalTitle">How many rounds?</h2>
+        <button class="modal-close-btn" onclick="window.closeModal('roundsModal')">
+          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M18 6L6 18M6 6L18 18"/>
+          </svg>
+        </button>
       </div>
-      <div class="modal-buttons">
-        <button class="modal-btn cancel" onclick="window.closeModal('roundsModal')">Cancel</button>
-        <button class="modal-btn" onclick="window.saveRounds()">Save</button>
+      <div class="time-picker-area">
+        <div class="selection-area"></div>
+        <div class="single-picker-container">
+          <div class="single-picker-area">
+            <div class="time-label rounds">rounds</div>
+            <div class="rounds-picker-item picker-spacer" data-value=""></div>
+            <div class="rounds-picker-item picker-spacer" data-value=""></div>
+            <div class="rounds-picker-item" data-value="1">1</div>
+            <div class="rounds-picker-item" data-value="2">2</div>
+            <div class="rounds-picker-item" data-value="3">3</div>
+            <div class="rounds-picker-item" data-value="4">4</div>
+            <div class="rounds-picker-item" data-value="5">5</div>
+            <div class="rounds-picker-item" data-value="6">6</div>
+            <div class="rounds-picker-item" data-value="7">7</div>
+            <div class="rounds-picker-item" data-value="8">8</div>
+            <div class="rounds-picker-item" data-value="9">9</div>
+            <div class="rounds-picker-item" data-value="10">10</div>
+            <div class="rounds-picker-item picker-spacer" data-value=""></div>
+            <div class="rounds-picker-item picker-spacer" data-value=""></div>
+          </div>
+        </div>
+        <div class="blur-top"></div>
+        <div class="blur-bottom"></div>
+      </div>
+      <div class="modal-button-area">
+        <button class="modal-save-btn" onclick="window.saveRounds()">Save</button>
       </div>
     </div>
   </div>
@@ -566,29 +985,69 @@
 <script type="module">
   import { 
     openTimeModal, 
+    openBreathingStartModal,
     openSecondsModal, 
     openRoundsModal, 
     closeModal, 
     saveTime, 
+    saveBreathingStart,
     saveSeconds, 
     saveRounds, 
     saveSettings,
-    initializeEditPage 
+    initializeEditPage,
+    setScrollSensitivity,
+    getScrollSensitivity,
+    increaseScrollSensitivity,
+    decreaseScrollSensitivity,
+    resetScrollSensitivity
   } from '/js/edit.js';
 
   // Make functions available globally for onclick handlers
   window.openTimeModal = openTimeModal;
+  window.openBreathingStartModal = openBreathingStartModal;
   window.openSecondsModal = openSecondsModal;
   window.openRoundsModal = openRoundsModal;
   window.closeModal = closeModal;
   window.saveTime = saveTime;
+  window.saveBreathingStart = saveBreathingStart;
   window.saveSeconds = saveSeconds;
   window.saveRounds = saveRounds;
   window.saveSettings = saveSettings;
+  
+  // Make scroll sensitivity functions available globally
+  window.setScrollSensitivity = setScrollSensitivity;
+  window.getScrollSensitivity = getScrollSensitivity;
+  window.increaseScrollSensitivity = increaseScrollSensitivity;
+  window.decreaseScrollSensitivity = decreaseScrollSensitivity;
+  window.resetScrollSensitivity = resetScrollSensitivity;
 
   // Initialize the edit page
   document.addEventListener('DOMContentLoaded', function() {
     initializeEditPage();
+    
+    // Add keyboard shortcuts for scroll sensitivity control
+    document.addEventListener('keydown', function(e) {
+      // Ctrl/Cmd + Plus: Increase scroll sensitivity
+      if ((e.ctrlKey || e.metaKey) && e.key === '=') {
+        e.preventDefault();
+        const newValue = increaseScrollSensitivity();
+        console.log('Scroll sensitivity increased to:', newValue.toFixed(1));
+      }
+      
+      // Ctrl/Cmd + Minus: Decrease scroll sensitivity
+      if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+        e.preventDefault();
+        const newValue = decreaseScrollSensitivity();
+        console.log('Scroll sensitivity decreased to:', newValue.toFixed(1));
+      }
+      
+      // Ctrl/Cmd + 0: Reset scroll sensitivity
+      if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+        e.preventDefault();
+        const newValue = resetScrollSensitivity();
+        console.log('Scroll sensitivity reset to:', newValue.toFixed(1));
+      }
+    });
   });
 </script>
 </body>

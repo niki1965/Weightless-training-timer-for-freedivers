@@ -1,6 +1,6 @@
 const KEY = 'wl.currentConfig.v1';
 const storage = localStorage; // ← 이미 결정한 대로 영구 저장
-const DEFAULT = { breatheSec:120, holdSec:60, decreaseSec:10, rounds:5, updatedAt:null };
+const DEFAULT = { breatheSec:120, holdSec:60, decreaseSec:10, rounds:6, updatedAt:null };
 
 export function load(){
   try { return { ...DEFAULT, ...JSON.parse(storage.getItem(KEY)||'{}') }; }
