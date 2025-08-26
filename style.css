@@ -61,23 +61,49 @@ body {
 
 .main-avatar {
   position: absolute;
-  top: 8.41px;
-  left: 12.35px;
-  width: 59.2px;
-  height: 59.61px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
   object-fit: contain;
   transition: transform 0.8s ease-in;
 }
 
-/* Avatar animations */
-.main-avatar.float-up {
+/* Lottie 애니메이션을 위한 스타일 */
+#lottie-avatar {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 300px;
+  height: 300px;
+  transition: transform 0.8s ease-in;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Lottie 애니메이션 컨테이너 스타일 */
+#lottie-avatar svg {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+/* Avatar animations - 아바타를 중앙에 유지하기 위해 애니메이션 제거 */
+/* .main-avatar.float-up,
+#lottie-avatar.float-up {
   animation: floatUp 0.8s ease-in forwards;
 }
 
-.main-avatar.bounce-down {
+.main-avatar.bounce-down,
+#lottie-avatar.bounce-down {
   animation: bounceDown 1.2s ease-in forwards;
-}
+} */
 
+/* 애니메이션 키프레임도 주석 처리 */
+/*
 @keyframes floatUp {
   0% {
     transform: translateY(0);
@@ -98,6 +124,7 @@ body {
     transform: translateY(0);
   }
 }
+*/
 
 /* Header */
 .header {
@@ -106,7 +133,7 @@ body {
   left: 0;
   right: 0;
   height: 60px;
-  z-index: 10;
+  z-index: 1000;
   background: transparent;
 }
 
@@ -433,6 +460,36 @@ body {
   transform: scale(0.98);
 }
 
+.audio-toggle {
+  width: 45px;
+  height: 45px;
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid #E7E8E8;
+  border-radius: 50%;
+  font-family: 'Pretendard';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 1.2000000817435128em;
+  color: #0F1F6C;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  backdrop-filter: blur(12px);
+  transition: all 0.2s ease;
+}
+
+.audio-toggle:hover {
+  background: rgba(185, 209, 222, 0.9);
+  border: 1px solid #F7FAFC;
+}
+
+.audio-toggle:active {
+  background: rgba(185, 209, 222, 0.9);
+  border: 1px solid #F7FAFC;
+  transform: scale(0.98);
+}
+
 .start-btn {
   flex: 1;
   height: 45px;
@@ -473,6 +530,8 @@ body {
   height: 100vh;
   z-index: 20;
 }
+
+
 
 /* Ready Information */
 .ready-info {

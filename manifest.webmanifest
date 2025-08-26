@@ -1,0 +1,20 @@
+{
+  "name": "Weightless - CO₂ Training Timer",
+  "short_name": "Weightless",
+  "description": "A mindful CO₂ training timer designed to support safe practice",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0F1F6C",
+  "theme_color": "#0F1F6C",
+  "orientation": "portrait",
+  "scope": "/",
+  "lang": "en",
+  "icons": [
+    {
+      "src": "images/weightless-logo.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}

@@ -1,4 +1,329 @@
+// Lottie 애니메이션 초기화
+let lottieAnimation;
+
+// 로티 애니메이션 활성화 여부 (문제가 있을 때 false로 설정)
+const ENABLE_LOTTIE = true;
+
+// 음성 재생을 위한 Audio 객체들
+const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+let roundStartAudio = null;
+let getReadyToHoldAudio = null;
+let getReadyToBreatheAudio = null;
+let breatheGentlyAudio = null;
+let finalRoundClosingAudio = null;
+let isAudioEnabled = true;
+let isSoundOn = true;
+
+// 음성 파일 초기화
+function initAudio() {
+  try {
+    // MP3 파일 사용 권장 (가장 안정적)
+    roundStartAudio = new Audio('audio/round1-starts-soon.mp3');
+    getReadyToHoldAudio = new Audio('audio/get-ready-to-hold.mp3');
+    getReadyToBreatheAudio = new Audio('audio/get-ready-to-breathe.mp3');
+    breatheGentlyAudio = new Audio('audio/breathe-gently-round-begun.mp3');
+    finalRoundClosingAudio = new Audio('audio/final-round-closing.mp3');
+    
+    // Round start 음성 로드 완료 이벤트
+    roundStartAudio.addEventListener('canplaythrough', function() {
+      console.log('Round start audio loaded successfully');
+    });
+    
+    // Get ready to hold 음성 로드 완료 이벤트
+    getReadyToHoldAudio.addEventListener('canplaythrough', function() {
+      console.log('Get ready to hold audio loaded successfully');
+    });
+    
+    // Get ready to breathe 음성 로드 완료 이벤트
+    getReadyToBreatheAudio.addEventListener('canplaythrough', function() {
+      console.log('Get ready to breathe audio loaded successfully');
+    });
+    
+    // Breathe gently 음성 로드 완료 이벤트
+    breatheGentlyAudio.addEventListener('canplaythrough', function() {
+      console.log('Breathe gently audio loaded successfully');
+    });
+    
+    // Final round closing 음성 로드 완료 이벤트
+    finalRoundClosingAudio.addEventListener('canplaythrough', function() {
+      console.log('Final round closing audio loaded successfully');
+    });
+    
+    // 음성 로드 에러 처리
+    roundStartAudio.addEventListener('error', function(e) {
+      console.error('Round start audio loading error:', e);
+    });
+    
+    getReadyToHoldAudio.addEventListener('error', function(e) {
+      console.error('Get ready to hold audio loading error:', e);
+    });
+    
+    getReadyToBreatheAudio.addEventListener('error', function(e) {
+      console.error('Get ready to breathe audio loading error:', e);
+    });
+    
+    breatheGentlyAudio.addEventListener('error', function(e) {
+      console.error('Breathe gently audio loading error:', e);
+    });
+    
+    finalRoundClosingAudio.addEventListener('error', function(e) {
+      console.error('Final round closing audio loading error:', e);
+    });
+    
+    // 음성 재생 완료 이벤트
+    roundStartAudio.addEventListener('ended', function() {
+      console.log('Round start audio finished');
+    });
+    
+    getReadyToHoldAudio.addEventListener('ended', function() {
+      console.log('Get ready to hold audio finished');
+    });
+    
+    getReadyToBreatheAudio.addEventListener('ended', function() {
+      console.log('Get ready to breathe audio finished');
+    });
+    
+    breatheGentlyAudio.addEventListener('ended', function() {
+      console.log('Breathe gently audio finished');
+    });
+    
+    finalRoundClosingAudio.addEventListener('ended', function() {
+      console.log('Final round closing audio finished');
+    });
+    
+  } catch (error) {
+    console.error('Failed to initialize audio:', error);
+    isAudioEnabled = false;
+  }
+}
+
+// 음성 재생 함수들
+function playRoundStartSound() {
+  if (!isAudioEnabled || !isSoundOn || !roundStartAudio) {
+    console.log('Audio disabled or not loaded');
+    return;
+  }
+  
+  try {
+    // 이미 재생 중이면 처음부터 다시 재생
+    roundStartAudio.currentTime = 0;
+    roundStartAudio.play().catch(function(error) {
+      console.error('Audio play failed:', error);
+      // 사용자 상호작용이 필요한 경우를 위한 처리
+      if (error.name === 'NotAllowedError') {
+        console.log('Audio play requires user interaction');
+      }
+    });
+  } catch (error) {
+    console.error('Error playing audio:', error);
+  }
+}
+
+function playGetReadyToHoldSound() {
+  if (!isAudioEnabled || !isSoundOn || !getReadyToHoldAudio) {
+    console.log('Audio disabled or not loaded');
+    return;
+  }
+  
+  try {
+    // 이미 재생 중이면 처음부터 다시 재생
+    getReadyToHoldAudio.currentTime = 0;
+    getReadyToHoldAudio.play().catch(function(error) {
+      console.error('Get ready to hold audio play failed:', error);
+      // 사용자 상호작용이 필요한 경우를 위한 처리
+      if (error.name === 'NotAllowedError') {
+        console.log('Audio play requires user interaction');
+      }
+    });
+  } catch (error) {
+    console.error('Error playing get ready to hold audio:', error);
+  }
+}
+
+function playGetReadyToBreatheSound() {
+  if (!isAudioEnabled || !isSoundOn || !getReadyToBreatheAudio) {
+    console.log('Audio disabled or not loaded');
+    return;
+  }
+  
+  try {
+    // 이미 재생 중이면 처음부터 다시 재생
+    getReadyToBreatheAudio.currentTime = 0;
+    getReadyToBreatheAudio.play().catch(function(error) {
+      console.error('Get ready to breathe audio play failed:', error);
+      // 사용자 상호작용이 필요한 경우를 위한 처리
+      if (error.name === 'NotAllowedError') {
+        console.log('Audio play requires user interaction');
+      }
+    });
+  } catch (error) {
+    console.error('Error playing get ready to breathe audio:', error);
+  }
+}
+
+function playBreatheGentlySound() {
+  if (!isAudioEnabled || !isSoundOn || !breatheGentlyAudio) {
+    console.log('Audio disabled or not loaded');
+    return;
+  }
+  
+  try {
+    // 이미 재생 중이면 처음부터 다시 재생
+    breatheGentlyAudio.currentTime = 0;
+    breatheGentlyAudio.play().catch(function(error) {
+      console.error('Breathe gently audio play failed:', error);
+      // 사용자 상호작용이 필요한 경우를 위한 처리
+      if (error.name === 'NotAllowedError') {
+        console.log('Audio play requires user interaction');
+      }
+    });
+  } catch (error) {
+    console.error('Error playing breathe gently audio:', error);
+  }
+}
+
+function playFinalRoundClosingSound() {
+  if (!isAudioEnabled || !isSoundOn || !finalRoundClosingAudio) {
+    console.log('Audio disabled or not loaded');
+    return;
+  }
+  
+  try {
+    // 이미 재생 중이면 처음부터 다시 재생
+    finalRoundClosingAudio.currentTime = 0;
+    finalRoundClosingAudio.play().catch(function(error) {
+      console.error('Final round closing audio play failed:', error);
+      // 사용자 상호작용이 필요한 경우를 위한 처리
+      if (error.name === 'NotAllowedError') {
+        console.log('Audio play requires user interaction');
+      }
+    });
+  } catch (error) {
+    console.error('Error playing final round closing audio:', error);
+  }
+}
+
+// 음성 활성화/비활성화 토글
+function toggleAudio() {
+  isAudioEnabled = !isAudioEnabled;
+  console.log('Audio enabled:', isAudioEnabled);
+  
+  // UI 업데이트 (음성 버튼이 있다면)
+  const audioButton = document.querySelector('.audio-toggle');
+  if (audioButton) {
+    audioButton.textContent = isAudioEnabled ? '��' : '🔇';
+  }
+}
+
+// Lottie 애니메이션 제어 함수들
+function playLottieAnimation() {
+  if (lottieAnimation) {
+    lottieAnimation.play();
+  }
+}
+
+function pauseLottieAnimation() {
+  if (lottieAnimation) {
+    lottieAnimation.pause();
+  }
+}
+
+function stopLottieAnimation() {
+  if (lottieAnimation) {
+    lottieAnimation.stop();
+  }
+}
+
+function setLottieSpeed(speed) {
+  if (lottieAnimation) {
+    lottieAnimation.setSpeed(speed);
+  }
+}
+
+function goToAndPlay(frame) {
+  if (lottieAnimation) {
+    lottieAnimation.goToAndPlay(frame);
+  }
+}
+
+// DOM이 로드된 후 Lottie 애니메이션 초기화
 document.addEventListener('DOMContentLoaded', function() {
+  // 음성 초기화
+  initAudio();
+  
+  // 로티 애니메이션이 비활성화되어 있으면 바로 SVG로 폴백
+  if (!ENABLE_LOTTIE) {
+    console.log('Lottie animation disabled, using SVG fallback');
+    fallbackToSVG();
+    return;
+  }
+
+  // Lottie 라이브러리가 로드되었는지 확인
+  if (typeof lottie === 'undefined') {
+    console.error('Lottie library not loaded');
+    fallbackToSVG();
+    return;
+  }
+
+  // 컨테이너 요소 확인
+  const avatarContainer = document.getElementById('lottie-avatar');
+  if (!avatarContainer) {
+    console.error('Avatar container not found');
+    return;
+  }
+
+  // Lottie 애니메이션 초기화
+  try {
+    console.log('Initializing Lottie animation...');
+    lottieAnimation = lottie.loadAnimation({
+      container: avatarContainer,
+      renderer: 'svg',
+      loop: true,
+      autoplay: true,
+      path: 'animations/avatar.json'
+    });
+
+    // 애니메이션 로드 완료 후 이벤트 리스너 추가
+    lottieAnimation.addEventListener('DOMLoaded', function() {
+      console.log('Lottie animation loaded successfully');
+      console.log('Animation container:', avatarContainer);
+      console.log('Animation object:', lottieAnimation);
+    });
+
+    // 데이터 로드 완료 이벤트
+    lottieAnimation.addEventListener('data_ready', function() {
+      console.log('Lottie data ready');
+    });
+
+    // 에러 처리
+    lottieAnimation.addEventListener('error', function(error) {
+      console.error('Lottie animation error:', error);
+      fallbackToSVG();
+    });
+
+    // 5초 후에도 로딩되지 않으면 폴백
+    setTimeout(function() {
+      if (!lottieAnimation || !lottieAnimation.isLoaded) {
+        console.log('Lottie animation loading timeout, falling back to SVG');
+        fallbackToSVG();
+      }
+    }, 5000);
+
+  } catch (error) {
+    console.error('Failed to initialize Lottie animation:', error);
+    fallbackToSVG();
+  }
+
+  // 폴백 함수
+  function fallbackToSVG() {
+    const container = document.getElementById('lottie-avatar');
+    if (container) {
+      console.log('Falling back to SVG image');
+      container.innerHTML = '<img src="images/image_main avatar.svg" alt="Main avatar" width="300" height="300" />';
+      container.className = 'main-avatar'; // 기존 클래스 적용
+    }
+  }
+
   // Import store functions
   import('./store.js').then(({ load }) => {
     // Load saved configuration
@@ -237,7 +562,13 @@ function initializeMainPage(trainingData) {
   
   console.log('Found edit buttons:', editBtns.length);
 
-  let isSoundOn = true;
+  isAudioEnabled = isSoundOn; // 초기 상태 동기화
+  
+  // 초기 아이콘 상태 설정
+  if (soundIcon) {
+    soundIcon.src = isSoundOn ? 'icn/SoundOn.svg' : 'icn/SoundOff.svg';
+    soundIcon.alt = isSoundOn ? 'Sound On' : 'Sound Off';
+  }
 
   // Only add event listener if hamburger button exists
   if (hamburgerBtn) {
@@ -246,17 +577,23 @@ function initializeMainPage(trainingData) {
     });
   }
 
-  soundBtn.addEventListener('click', function() {
+  // 사운드 토글 함수
+  function toggleSound() {
     isSoundOn = !isSoundOn;
-    if (isSoundOn) {
-      soundIcon.src = 'icn/SoundOn.svg';
-      soundIcon.alt = 'Sound On';
-    } else {
-      soundIcon.src = 'icn/SoundOff.svg';
-      soundIcon.alt = 'Sound Off';
+    isAudioEnabled = isSoundOn; // 음성 재생 상태와 동기화
+    
+    // 사운드 아이콘 업데이트
+    if (soundIcon) {
+      soundIcon.src = isSoundOn ? 'icn/SoundOn.svg' : 'icn/SoundOff.svg';
+      soundIcon.alt = isSoundOn ? 'Sound On' : 'Sound Off';
     }
+    
     console.log('Sound toggled:', isSoundOn ? 'On' : 'Off');
-  });
+    console.log('Audio enabled:', isAudioEnabled);
+  }
+
+  // 사운드 버튼 이벤트
+  soundBtn.addEventListener('click', toggleSound);
 
   editBtns.forEach((btn, index) => {
     console.log(`Adding click listener to edit button ${index + 1}`);
@@ -322,13 +659,21 @@ function initializeMainPage(trainingData) {
     const readyText = document.querySelector('.ready-text');
     if (readyText) {
       readyText.textContent = 'Round 1 starts soon.';
+      // 음성 재생
+      playRoundStartSound();
     }
     
-    // Trigger avatar float-up animation when ready-info appears
-    const mainAvatar = document.querySelector('.main-avatar');
-    if (mainAvatar) {
-      mainAvatar.classList.add('float-up');
+    // 로티 애니메이션 재생
+    if (lottieAnimation) {
+      lottieAnimation.play();
+      console.log('Lottie animation started for training');
     }
+    
+    // 아바타 애니메이션 제거 - 중앙에 유지
+    // const mainAvatar = document.querySelector('.main-avatar');
+    // if (mainAvatar) {
+    //   mainAvatar.classList.add('float-up');
+    // }
     
     // Initialize running panel with first round data
     initializeRunningPanel();
@@ -402,12 +747,12 @@ function initializeMainPage(trainingData) {
       showBreatheGentlyMessage();
     }
     
-    // Trigger avatar bounce-down animation when breathe timer starts
-    const mainAvatar = document.querySelector('.main-avatar');
-    if (mainAvatar) {
-      mainAvatar.classList.remove('float-up');
-      mainAvatar.classList.add('bounce-down');
-    }
+    // 아바타 애니메이션 제거 - 중앙에 유지
+    // const mainAvatar = document.querySelector('.main-avatar');
+    // if (mainAvatar) {
+    //   mainAvatar.classList.remove('float-up');
+    //   mainAvatar.classList.add('bounce-down');
+    // }
     
     breatheInterval = setInterval(() => {
       currentBreatheTime--;
@@ -438,6 +783,8 @@ function initializeMainPage(trainingData) {
     const readyText = document.querySelector('.ready-text');
     if (readyText) {
       readyText.textContent = 'Breathe gently. The round has begun.';
+      // 음성 재생
+      playBreatheGentlySound();
     }
     
     // Hide countdown for this message
@@ -467,9 +814,13 @@ function initializeMainPage(trainingData) {
       if (currentRound >= trainingData.length) {
         // This is the final round
         readyText.textContent = 'The final round is closing.';
+        // 음성 재생
+        playFinalRoundClosingSound();
       } else {
         // This is not the final round
         readyText.textContent = 'Get ready to breathe.';
+        // 음성 재생
+        playGetReadyToBreatheSound();
       }
     }
     
@@ -513,6 +864,8 @@ function initializeMainPage(trainingData) {
     const readyText = document.querySelector('.ready-text');
     if (readyText) {
       readyText.textContent = 'Get ready to hold.';
+      // 음성 재생
+      playGetReadyToHoldSound();
     }
     
     // Show countdown for this message
@@ -608,6 +961,12 @@ function initializeMainPage(trainingData) {
     isPaused = true;
     pauseBtn.textContent = 'Resume';
     
+    // 로티 애니메이션 일시정지
+    if (lottieAnimation) {
+      lottieAnimation.pause();
+      console.log('Lottie animation paused');
+    }
+    
     // Clear intervals
     if (countdownInterval) clearInterval(countdownInterval);
     if (breatheInterval) clearInterval(breatheInterval);
@@ -617,6 +976,12 @@ function initializeMainPage(trainingData) {
   function resumeTraining() {
     isPaused = false;
     pauseBtn.textContent = 'Pause';
+    
+    // 로티 애니메이션 재생
+    if (lottieAnimation) {
+      lottieAnimation.play();
+      console.log('Lottie animation resumed');
+    }
     
     // Resume current phase based on which timer is active
     if (currentBreatheTime > 0) {
@@ -653,6 +1018,12 @@ function initializeMainPage(trainingData) {
     isTraining = false;
     isPaused = false;
     
+    // 로티 애니메이션 정지
+    if (lottieAnimation) {
+      lottieAnimation.stop();
+      console.log('Lottie animation stopped');
+    }
+    
     // Clear all intervals
     if (countdownInterval) clearInterval(countdownInterval);
     if (breatheInterval) clearInterval(breatheInterval);
@@ -668,10 +1039,10 @@ function initializeMainPage(trainingData) {
     }
     
     // Reset avatar animations
-    const mainAvatar = document.querySelector('.main-avatar');
-    if (mainAvatar) {
-      mainAvatar.classList.remove('float-up', 'bounce-down');
-    }
+    // const mainAvatar = document.querySelector('.main-avatar');
+    // if (mainAvatar) {
+    //   mainAvatar.classList.remove('float-up', 'bounce-down');
+    // }
     
     // Hide training screen and show start screen
     console.log('Hiding training screen and showing start screen...');
@@ -695,12 +1066,19 @@ function initializeMainPage(trainingData) {
     const readyText = document.querySelector('.ready-text');
     if (readyText) {
       readyText.textContent = 'Round 1 starts soon.';
+      // Stop training에서는 음성 재생하지 않음
     }
   }
 
   function completeTraining() {
     console.log('Training completed!');
     isTraining = false;
+    
+    // 로티 애니메이션 정지
+    if (lottieAnimation) {
+      lottieAnimation.stop();
+      console.log('Lottie animation stopped on completion');
+    }
     
     // Hide training screen and show completion screen
     trainingScreen.style.display = 'none';
@@ -813,16 +1191,17 @@ function initializeMainPage(trainingData) {
     collapsedPanel.style.display = 'flex';
     
     // Reset avatar animations
-    const mainAvatar = document.querySelector('.main-avatar');
-    if (mainAvatar) {
-      mainAvatar.classList.remove('float-up', 'bounce-down');
-    }
+    // const mainAvatar = document.querySelector('.main-avatar');
+    // if (mainAvatar) {
+    //   mainAvatar.classList.remove('float-up', 'bounce-down');
+    // }
     
     // Reset ready text and countdown
     const readyText = document.querySelector('.ready-text');
     const countdown = document.getElementById('countdown');
     if (readyText) {
       readyText.textContent = 'Round 1 starts soon.';
+      // Back to start에서는 음성 재생하지 않음
     }
     if (countdown) {
       countdown.textContent = '3';

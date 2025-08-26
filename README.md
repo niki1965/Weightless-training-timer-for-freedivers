@@ -1,14 +1,57 @@
 # Weightless - CO₂ Training Timer
 
-A beautiful and modern CO₂ training timer application designed for safe breath-holding practice.
+A mindful CO₂ training timer designed to support safe practice.
 
 ## Features
 
-- **Main Screen**: Default timer view with collapsed session panel
-- **Session Panel**: Expandable panel showing training details
-- **Table View**: Detailed round-by-round breakdown when expanded
-- **Glassmorphism Design**: Modern UI with backdrop blur effects
-- **Responsive Layout**: Optimized for mobile devices (393px width)
+- **Lottie Animation**: Main avatar now uses Lottie animations for smooth, lightweight animations
+- CO₂ training timer with customizable rounds
+- Progressive web app (PWA) support
+- Responsive design
+- Sound controls
+
+## Lottie Animation Setup
+
+### 1. Animation File
+Place your Lottie animation JSON file in the `animations/` directory:
+```
+animations/avatar-animation.json
+```
+
+### 2. File Requirements
+- **Format**: JSON (exported from After Effects with Bodymovin plugin)
+- **Size**: Recommended under 100KB for optimal performance
+- **Dimensions**: Should match the avatar container (59.2px × 59.61px)
+
+### 3. Animation Control
+The following functions are available for controlling the Lottie animation:
+
+```javascript
+// Play animation
+playLottieAnimation();
+
+// Pause animation
+pauseLottieAnimation();
+
+// Stop animation
+stopLottieAnimation();
+
+// Set animation speed (1.0 = normal speed)
+setLottieSpeed(1.5);
+
+// Go to specific frame and play
+goToAndPlay(30);
+```
+
+### 4. Fallback
+If the Lottie animation fails to load, the system automatically falls back to the original SVG image.
+
+## Performance Benefits
+
+- **File Size**: JSON files are typically 10-50KB vs GIF (500KB+) or MP4 (1MB+)
+- **Quality**: Vector-based, scalable to any resolution
+- **Performance**: GPU-accelerated rendering
+- **Control**: Full programmatic control over playback
 
 ## Design
 

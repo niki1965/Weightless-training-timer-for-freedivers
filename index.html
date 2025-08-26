@@ -8,6 +8,8 @@
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="stylesheet" href="style.css">
   <link href="https://fonts.googleapis.com/css2?family=Pretendard:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <!-- Lottie Web 라이브러리 추가 -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.12.2/lottie.min.js"></script>
 </head>
 <body>
   <div class="container">
@@ -16,7 +18,8 @@
       <div class="bg-gradient"></div>
       <div class="bg-noise"></div>
       <div class="image-area">
-        <img class="main-avatar" src="images/image_main avatar.svg" alt="Main avatar" width="75.3" height="83.75" />
+        <!-- Lottie 애니메이션을 위한 div로 교체 -->
+        <div id="lottie-avatar" class="main-avatar"></div>
       </div>
     </div>
 
@@ -145,6 +148,7 @@
       
       <div class="button-area">
         <button class="edit-btn" onclick="window.location.href='/pages/edit.html'">edit</button>
+        <button class="audio-toggle" onclick="toggleAudio()" title="Toggle Audio">🔊</button>
         <button class="start-btn">
           Start Training
           <img src="icn/ArrowRight.svg" alt="Arrow Right" width="16" height="16">
