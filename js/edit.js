@@ -408,7 +408,7 @@ export async function saveSettings() {
   console.log('Settings saved:', config);
   
   // Navigate to main page
-  window.location.href = '/';
+  window.location.href = '../index.html';
 }
 
 // Event listeners

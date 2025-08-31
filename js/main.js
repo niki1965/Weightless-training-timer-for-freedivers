@@ -203,18 +203,6 @@ function playFinalRoundClosingSound() {
   }
 }
 
-// 음성 활성화/비활성화 토글
-function toggleAudio() {
-  isAudioEnabled = !isAudioEnabled;
-  console.log('Audio enabled:', isAudioEnabled);
-  
-  // UI 업데이트 (음성 버튼이 있다면)
-  const audioButton = document.querySelector('.audio-toggle');
-  if (audioButton) {
-    audioButton.textContent = isAudioEnabled ? '��' : '🔇';
-  }
-}
-
 // Lottie 애니메이션 제어 함수들
 function playLottieAnimation() {
   if (lottieAnimation) {
@@ -599,7 +587,7 @@ function initializeMainPage(trainingData) {
     console.log(`Adding click listener to edit button ${index + 1}`);
     btn.addEventListener('click', function() {
       console.log('Edit clicked');
-      window.location.href = '/pages/edit.html';
+      window.location.href = './pages/edit.html';
     });
   });
 
