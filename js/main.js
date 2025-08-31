@@ -599,7 +599,7 @@ function initializeMainPage(trainingData) {
     console.log(`Adding click listener to edit button ${index + 1}`);
     btn.addEventListener('click', function() {
       console.log('Edit clicked');
-      window.location.href = '/pages/edit.html';
+      window.location.href = './pages/edit.html';
     });
   });
 
